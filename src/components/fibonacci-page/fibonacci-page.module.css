@@ -7,7 +7,6 @@
 
 .btn {
   min-width: 178px;
-  color: white
 }
 
 .digits {
@@ -17,6 +16,7 @@
   max-width: 944px;
   margin: auto;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: calc(var(--offset-base-size)*24) calc(var(--offset-base-size)*8);
 }

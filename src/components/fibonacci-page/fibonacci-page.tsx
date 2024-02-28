@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./fibonacci.module.css"
+import styles from "./fibonacci-page.module.css"
 import useInput from "../../utils/hooks/useInput";
 import useLoading from "../../utils/hooks/useLoading";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -31,7 +31,7 @@ export const FibonacciPage: React.FC = () => {
 
     <div className={styles.container}>
       <Input isLimitText={true} max={19} onChange={onChange} placeholder="Введите число от 1 до 19" type="number" />
-      <Button isLoader={isLoading} disabled={disabledCondition} extraClass={styles.btn} text="Развернуть" onClick={handleClick} /> 
+      <Button isLoader={isLoading} disabled={disabledCondition} extraClass={styles.btn} text="Рассчитать" onClick={handleClick} /> 
     </div>
 
     <ul className={styles.digits}>
