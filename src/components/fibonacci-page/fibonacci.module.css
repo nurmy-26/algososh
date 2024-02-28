@@ -1,0 +1,22 @@
+.container {
+  max-width: 567px;
+  display: flex;
+  gap: calc(var(--offset-base-size)*6);
+  margin: 0 auto 48px;
+}
+
+.btn {
+  min-width: 178px;
+  color: white
+}
+
+.digits {
+  padding: 0;
+  list-style: none;
+
+  max-width: 944px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--offset-base-size)*24) calc(var(--offset-base-size)*8);
+}

@@ -37,3 +37,5 @@ const reverseArray = async (arr: TCircle[], setCircles: (circles: TCircle[]) => 
 };
 
 export default reverseArray;
+// todo - сделать алгоритм чистой функцией, визуализацию отдельно
+// алгоритм возвращает массив стейтов, компонент отрисовывает стейты по таймеру
