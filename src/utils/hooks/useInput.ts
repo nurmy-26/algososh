@@ -6,7 +6,8 @@ const useInput = (initialValue: string) => {
 
   return {
     inputValue,
-    onChange: (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
+    onChange: (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value),
+    clearInput: () => setValue('')
   };
 };
 
