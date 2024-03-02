@@ -13,7 +13,8 @@
   margin-left: 68px;
 }
 
-.stack {
+.queue {
+  margin: 0;
   padding: 0;
   list-style: none;
 

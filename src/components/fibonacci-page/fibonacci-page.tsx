@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./fibonacci-page.module.css"
-import useInput from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useInput";
 import useLoading from "../../utils/hooks/useLoading";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Button } from "../ui/button/button";
@@ -10,18 +10,18 @@ import fibonacciIterative from "./algorithm";
 
 
 export const FibonacciPage: React.FC = () => {
-  const { inputValue, onChange } = useInput('');
+  const { values, onChange } = useForm({ 'number': ''});
   const { isLoading, setLoading } = useLoading(false);
   // state для отслеживания изменений в массиве и ререндера кругов
   const [circles, setCircles] = React.useState<Array<number>>([]);
 
   // если число меньше нуля / поле пусто / число больше 19 - блочим кнопку
-  const disabledCondition = Number(inputValue) < 1 || !inputValue || Number(inputValue) > 19;
+  const disabledCondition = Number(values['number']) < 1 || !values['number'] || Number(values['number']) > 19;
 
   const handleClick = () => {
     setLoading(true);
 
-    const inputNumber = Number(inputValue);
+    const inputNumber = Number(values['number']);
     fibonacciIterative(inputNumber, setCircles, () => setLoading(false));
   }
 

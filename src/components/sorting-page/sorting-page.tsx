@@ -2,12 +2,13 @@ import React from "react";
 import styles from "./sorting-page.module.css"
 import { ElementStates } from "../../types/element-states";
 import { Direction } from "../../types/direction";
+import { getRandomArr } from "../../utils/helpers";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
 import { TClickedState, TColumn } from "./types";
-import { getRandomArr, makeBubbleSort, makeSelectionSort } from "./algorithm";
+import { makeBubbleSort, makeSelectionSort } from "./algorithm";
 
 
 export const SortingPage: React.FC = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./queue-page.module.css"
 import { ElementStates } from "../../types/element-states";
-import useInput from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useInput";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -13,7 +13,7 @@ import Queue from "./Queue";
 
 
 export const QueuePage: React.FC = () => {
-  const { inputValue, onChange, clearInput } = useInput('');
+  const { values, onChange, clearForm } = useForm({ 'queue': ''});
   const [loadingBtn, setLoadingBtn] = React.useState('')
   
   // для работы с одной и той же очередью
@@ -32,9 +32,9 @@ export const QueuePage: React.FC = () => {
       setCircles([...circles]);
       
       await setDelay(SHORT_DELAY_IN_MS);
-      que.enqueue({ value: inputValue, color: ElementStates.Changing }); // добавляем эл-т в исходную очередь
+      que.enqueue({ value: values["queue"], color: ElementStates.Changing }); // добавляем эл-т в исходную очередь
       circles[que.tailIndex - 1] = que.array[que.tailIndex - 1]; // обновляем tail элемент в рендерящемся массиве
-      clearInput();
+      clearForm();
       if (!headIndex) { setHeadIndex(true) };
       setCircles([...circles]);  
   
@@ -78,16 +78,16 @@ export const QueuePage: React.FC = () => {
     <SolutionLayout title="Очередь">
 
     <div className={styles.container}>
-      <Input extraClass={styles.input} isLimitText={true} maxLength={4} name="string" value={inputValue} onChange={onChange} />
+      <Input extraClass={styles.input} isLimitText={true} maxLength={4} name="queue" value={values["queue"]} onChange={onChange} />
       
-      <Button isLoader={loadingBtn === 'add'} disabled={!inputValue} 
+      <Button isLoader={loadingBtn === 'add'} disabled={!values["queue"]} 
         text="Добавить" onClick={handleAdd} />
       <Button isLoader={loadingBtn === 'delete'} text="Удалить" onClick={handleDelete} />
 
       <Button isLoader={loadingBtn === 'clear'} extraClass={styles.btn} text="Очистить" onClick={handleClear} />
     </div>
 
-    <ul className={styles.stack}>
+    <ul className={styles.queue}>
       {circles.map((item, index) => 
         <li key={index}>
           <Circle index={index} letter={item.value} state={item.color} 

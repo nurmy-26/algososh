@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./stack-page.module.css"
 import { ElementStates } from "../../types/element-states";
-import useInput from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useInput";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -13,7 +13,7 @@ import Stack from "./Stack";
 
 
 export const StackPage: React.FC = () => {
-  const { inputValue, onChange, clearInput } = useInput('');
+  const { values, onChange, clearForm } = useForm({ 'stack': ''});
   
   // для работы с одним и тем же стеком
   const [st] = React.useState(new Stack<TCircle, ElementStates>());
@@ -23,11 +23,11 @@ export const StackPage: React.FC = () => {
 
   // добавление в стек
   const handleAdd = async () => {
-    const newItem = { value: inputValue, color: ElementStates.Changing };
+    const newItem = { value: values["stack"], color: ElementStates.Changing };
     st.push(newItem);
     setTopIndex(st.peakIndex);
     setCircles([...st.array]);
-    clearInput();
+    clearForm();
 
     await setDelay(SHORT_DELAY_IN_MS);
     st.color = ElementStates.Default;
@@ -56,10 +56,10 @@ export const StackPage: React.FC = () => {
     <SolutionLayout title="Стек">
 
     <div className={styles.container}>
-      <Input extraClass={styles.input} isLimitText={true} maxLength={4} name="string" value={inputValue} onChange={onChange} />
+      <Input extraClass={styles.input} isLimitText={true} maxLength={4} name="stack" value={values["stack"]} onChange={onChange} />
       
       {/* ограничение стека - 11 элементов, чтобы влезал на экран */}
-      <Button disabled={!inputValue || st.size > 10} text="Добавить" onClick={handleAdd} />
+      <Button disabled={!values["stack"] || st.size > 10} text="Добавить" onClick={handleAdd} />
       <Button disabled={st.size < 1} text="Удалить" onClick={handleDelete} />
 
       <Button disabled={st.size < 1} extraClass={styles.btn} text="Очистить" onClick={handleClear} />
