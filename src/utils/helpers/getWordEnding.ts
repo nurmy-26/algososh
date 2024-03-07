@@ -20,3 +20,8 @@ const getWordEnding = (number: number | undefined, one: string, two: string, fiv
 }
 
 export default getWordEnding;
+
+// пример: getWordEnding(maxLength, 'символ', 'символа', 'символов')
+// при maxLength = 1, 21, 31, ... ---> "maxLength символ" (н., 21 символ)
+// при maxLength = 2, 3, 4, 22, 23, 24, ... ---> "maxLength символа" (н., 23 символа)
+// при maxLength = 5, 6, 7, 11, 12, 13, ... ---> "maxLength символов" (н., 13 символов)

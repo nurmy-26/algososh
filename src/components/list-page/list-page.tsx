@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./list-page.module.css"
+import { HEAD, TAIL } from "../../utils/constants/element-captions";
 import { ElementStates } from "../../types/element-states";
-import useForm from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useForm";
 import { getRandomArr, setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -24,16 +25,16 @@ const itemWithNewColor = (item: TCircle, newColor: ElementStates) => {
 
 export const ListPage: React.FC = () => {
   const { values, onChange, clearForm } = useForm({ 'value': '', 'ind': ''});
-  const [isClicked, setClicked] = React.useState<TClickedState>('');
+  const [isClicked, setClicked] = useState<TClickedState>('');
   
   const initialList = getRandomArr({min: 3, max: 5}, {min: 0, max: 99}).map((item) => (
     { value: item.toString(), color: ElementStates.Default }));
-  const [list] = React.useState(new List<TCircle>(initialList));
+  const [list] = useState(new List<TCircle>(initialList));
   const initialCircles = list.array;
-  const [circles, setCircles] = React.useState<Array<TCircle>>(initialCircles);
+  const [circles, setCircles] = useState<Array<TCircle>>(initialCircles);
 
-  const [tempAdded, setTempAdded] = React.useState<TCircle | null>(null);
-  const [tempDeleted, setTempDeleted] = React.useState<TCircle | null>(null);
+  const [tempAdded, setTempAdded] = useState<TCircle | null>(null);
+  const [tempDeleted, setTempDeleted] = useState<TCircle | null>(null);
 
   // получаем маленький кружок JSX.Element на основе переданных данных
   const getSmallCircle = (item: TCircle) => {
@@ -46,7 +47,7 @@ export const ListPage: React.FC = () => {
     if (tempAdded && index === tempAdded.index) {
       return getSmallCircle(tempAdded);
     } else if (index === list.headIndex) {
-      return "head";
+      return HEAD;
     } else {
       return "";
     }
@@ -55,7 +56,7 @@ export const ListPage: React.FC = () => {
     if (tempDeleted && index === tempDeleted.index) {
       return getSmallCircle(tempDeleted);
     } else if (index === list.tailIndex) {
-      return "tail";
+      return TAIL;
     } else {
       return "";
     }

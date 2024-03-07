@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./stack-page.module.css"
 import { ElementStates } from "../../types/element-states";
-import useForm from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useForm";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -16,10 +16,10 @@ export const StackPage: React.FC = () => {
   const { values, onChange, clearForm } = useForm({ 'stack': ''});
   
   // для работы с одним и тем же стеком
-  const [st] = React.useState(new Stack<TCircle, ElementStates>());
-  const [topIndex, setTopIndex] = React.useState(-1);
+  const [st] = useState(new Stack<TCircle, ElementStates>());
+  const [topIndex, setTopIndex] = useState(-1);
   // для отслеживания изменений в массиве и ререндера кругов
-  const [circles, setCircles] = React.useState<Array<TCircle>>([]);
+  const [circles, setCircles] = useState<Array<TCircle>>([]);
 
   // добавление в стек
   const handleAdd = async () => {

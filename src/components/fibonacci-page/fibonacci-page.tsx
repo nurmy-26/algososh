@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./fibonacci-page.module.css"
-import useForm from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useForm";
 import useLoading from "../../utils/hooks/useLoading";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Button } from "../ui/button/button";
@@ -13,7 +13,7 @@ export const FibonacciPage: React.FC = () => {
   const { values, onChange } = useForm({ 'number': ''});
   const { isLoading, setLoading } = useLoading(false);
   // state для отслеживания изменений в массиве и ререндера кругов
-  const [circles, setCircles] = React.useState<Array<number>>([]);
+  const [circles, setCircles] = useState<Array<number>>([]);
 
   // если число меньше нуля / поле пусто / число больше 19 - блочим кнопку
   const disabledCondition = Number(values['number']) < 1 || !values['number'] || Number(values['number']) > 19;

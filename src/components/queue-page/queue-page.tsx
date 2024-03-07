@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./queue-page.module.css"
+import { HEAD, TAIL } from "../../utils/constants/element-captions";
 import { ElementStates } from "../../types/element-states";
-import useForm from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useForm";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -14,14 +15,14 @@ import Queue from "./Queue";
 
 export const QueuePage: React.FC = () => {
   const { values, onChange, clearForm } = useForm({ 'queue': ''});
-  const [loadingBtn, setLoadingBtn] = React.useState('')
+  const [loadingBtn, setLoadingBtn] = useState('')
   
   // для работы с одной и той же очередью
-  const [que] = React.useState(new Queue<TCircle, ElementStates>(7, { value: "", color: ElementStates.Default }));
-  const [headIndex, setHeadIndex] = React.useState(false)
+  const [que] = useState(new Queue<TCircle>(7, { value: "", color: ElementStates.Default }));
+  const [headIndex, setHeadIndex] = useState(false)
   // для отслеживания изменений в массиве и ререндера кругов
   const initialState = que.array;
-  const [circles, setCircles] = React.useState<Array<TCircle>>(initialState);
+  const [circles, setCircles] = useState<Array<TCircle>>(initialState);
 
   // добавление в очередь
   const handleAdd = async () => {
@@ -91,8 +92,8 @@ export const QueuePage: React.FC = () => {
       {circles.map((item, index) => 
         <li key={index}>
           <Circle index={index} letter={item.value} state={item.color} 
-            head={index === que.headIndex && (item.value || headIndex)  ? "head" : ""} 
-            tail={item.value && index === (que.tailIndex - 1) ? "tail" : ""} />
+            head={index === que.headIndex && (item.value || headIndex)  ? HEAD : ""} 
+            tail={item.value && index === (que.tailIndex - 1) ? TAIL : ""} />
         </li>
       )}
     </ul>

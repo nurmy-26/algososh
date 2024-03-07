@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./string.module.css"
 import { ElementStates } from "../../types/element-states";
-import useForm from "../../utils/hooks/useInput";
+import useForm from "../../utils/hooks/useForm";
 import useLoading from "../../utils/hooks/useLoading";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Button } from "../ui/button/button";
@@ -15,7 +15,7 @@ export const StringComponent: React.FC = () => {
   const { values, onChange } = useForm({ 'string': ''});
   const { isLoading, setLoading } = useLoading(false);
   // state для отслеживания изменений в массиве и ререндера кругов
-  const [circles, setCircles] = React.useState<Array<TCircle>>([]);
+  const [circles, setCircles] = useState<Array<TCircle>>([]);
 
   const handleClick = () => {
     setLoading(true);

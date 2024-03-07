@@ -1,9 +1,7 @@
 import { TQueue } from "./types";
 
 
-type TItem<T, C> = T extends object & { color: C } ? T : never;
-
-class Queue<T, C> implements TQueue<T, C> {
+class Queue<T> implements TQueue<T> {
   private container: T[] = [];
   private head: number = 0;
   private tail: number = 0;

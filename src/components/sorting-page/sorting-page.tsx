@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./sorting-page.module.css"
 import { ElementStates } from "../../types/element-states";
 import { Direction } from "../../types/direction";
@@ -12,10 +12,10 @@ import { makeBubbleSort, makeSelectionSort } from "./algorithm";
 
 
 export const SortingPage: React.FC = () => {
-  const [isClicked, setClicked] = React.useState<TClickedState>('');
-  const [sortType, setSortType] = React.useState('selection');
+  const [isClicked, setClicked] = useState<TClickedState>('');
+  const [sortType, setSortType] = useState('selection');
   // state для отслеживания изменений в массиве и ререндера столбцов
-  const [columns, setColumns] = React.useState<Array<TColumn>>([]);
+  const [columns, setColumns] = useState<Array<TColumn>>([]);
 
   // выбор варианта сортировки
   const handleSelection = () => setSortType('selection');
