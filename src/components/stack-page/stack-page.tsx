@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./stack-page.module.css"
 import { ElementStates } from "../../types/element-states";
+import useMounted from "../../utils/hooks/useMounted";
 import useForm from "../../utils/hooks/useForm";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
@@ -13,6 +14,7 @@ import Stack from "./Stack";
 
 
 export const StackPage: React.FC = () => {
+  const isMounted = useMounted();
   const { values, onChange, clearForm } = useForm({ 'stack': ''});
   
   // для работы с одним и тем же стеком
@@ -30,6 +32,7 @@ export const StackPage: React.FC = () => {
     clearForm();
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
     st.color = ElementStates.Default;
     setCircles([...st.array]);
   }
@@ -40,6 +43,7 @@ export const StackPage: React.FC = () => {
     setCircles([...st.array]);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     st.pop();
     setTopIndex(st.peakIndex);
     setCircles([...st.array]);

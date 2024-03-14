@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./queue-page.module.css"
 import { HEAD, TAIL } from "../../utils/constants/element-captions";
 import { ElementStates } from "../../types/element-states";
+import useMounted from "../../utils/hooks/useMounted";
 import useForm from "../../utils/hooks/useForm";
 import { setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
@@ -14,6 +15,7 @@ import Queue from "./Queue";
 
 
 export const QueuePage: React.FC = () => {
+  const isMounted = useMounted();
   const { values, onChange, clearForm } = useForm({ 'queue': ''});
   const [loadingBtn, setLoadingBtn] = useState('')
   
@@ -33,13 +35,15 @@ export const QueuePage: React.FC = () => {
       setCircles([...circles]);
       
       await setDelay(SHORT_DELAY_IN_MS);
+      if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
       que.enqueue({ value: values["queue"], color: ElementStates.Changing }); // добавляем эл-т в исходную очередь
       circles[que.tailIndex - 1] = que.array[que.tailIndex - 1]; // обновляем tail элемент в рендерящемся массиве
       clearForm();
       if (!headIndex) { setHeadIndex(true) };
       setCircles([...circles]);  
-  
+
       await setDelay(SHORT_DELAY_IN_MS);
+      if (!isMounted.current) return;
       circles[que.tailIndex - 1] = {...que.array[que.tailIndex - 1], color: ElementStates.Default}; // конечный цвет
       setCircles([...circles]);
     }
@@ -55,6 +59,7 @@ export const QueuePage: React.FC = () => {
       setCircles([...circles]);
 
       await setDelay(SHORT_DELAY_IN_MS);
+      if (!isMounted.current) return;
       que.dequeue(); // удаляем из исходной очереди
       circles[que.headIndex - 1] = { ...que.array[que.headIndex - 1], color: ElementStates.Default };
       circles[que.headIndex] = { ...que.array[que.headIndex], color: ElementStates.Default };

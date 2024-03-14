@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./sorting-page.module.css"
 import { ElementStates } from "../../types/element-states";
 import { Direction } from "../../types/direction";
+import useMounted from "../../utils/hooks/useMounted";
 import { getRandomArr } from "../../utils/helpers";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { RadioInput } from "../ui/radio-input/radio-input";
@@ -12,6 +13,8 @@ import { makeBubbleSort, makeSelectionSort } from "./algorithm";
 
 
 export const SortingPage: React.FC = () => {
+  const isMounted = useMounted();
+  // if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
   const [isClicked, setClicked] = useState<TClickedState>('');
   const [sortType, setSortType] = useState('selection');
   // state для отслеживания изменений в массиве и ререндера столбцов
@@ -78,3 +81,5 @@ export const SortingPage: React.FC = () => {
     </SolutionLayout>
   );
 };
+
+// todo - постараться отделить алгоритм от setState (и уже тогда добавить проверку, монтирован ли компонент)

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./list-page.module.css"
 import { HEAD, TAIL } from "../../utils/constants/element-captions";
 import { ElementStates } from "../../types/element-states";
+import useMounted from "../../utils/hooks/useMounted";
 import useForm from "../../utils/hooks/useForm";
 import { getRandomArr, setDelay } from "../../utils/helpers";
 import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
@@ -24,6 +25,7 @@ const itemWithNewColor = (item: TCircle, newColor: ElementStates) => {
 
 
 export const ListPage: React.FC = () => {
+  const isMounted = useMounted();
   const { values, onChange, clearForm } = useForm({ 'value': '', 'ind': ''});
   const [isClicked, setClicked] = useState<TClickedState>('');
   
@@ -72,15 +74,18 @@ export const ListPage: React.FC = () => {
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
     setTempAdded(null);
     list.prepend(itemWithNewColor(newItem, ElementStates.Modified)); // добавляем в список
     setCircles(list.array);
     
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.array[0].color = ElementStates.Default;
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     clearForm();
     setClicked('');
   }
@@ -93,15 +98,18 @@ export const ListPage: React.FC = () => {
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     setTempAdded(null);
     list.append(itemWithNewColor(newItem, ElementStates.Modified));
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.array[list.listSize - 1].color = ElementStates.Default;
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     clearForm();
     setClicked('');
   }
@@ -115,15 +123,18 @@ export const ListPage: React.FC = () => {
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     setTempAdded(null);
     list.insertAt(itemWithNewColor(newItem, ElementStates.Modified), ind);
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.array[ind].color = ElementStates.Default;
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     clearForm();
     setClicked('');
   }
@@ -142,11 +153,13 @@ export const ListPage: React.FC = () => {
     setCircles(arrBeforeDelete);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.removeHead();
     setTempDeleted(null);
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     setClicked('');
   }
   // удалить из tail
@@ -163,11 +176,13 @@ export const ListPage: React.FC = () => {
     setCircles(arrBeforeDelete);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.removeTail();
     setTempDeleted(null);
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     setClicked('');
   }
   // удалить по индексу
@@ -185,11 +200,13 @@ export const ListPage: React.FC = () => {
     setCircles(arrBeforeDelete);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     list.deleteAt(ind);
     setTempDeleted(null);
     setCircles(list.array);
 
     await setDelay(SHORT_DELAY_IN_MS);
+    if (!isMounted.current) return;
     clearForm();
     setClicked('');
   }

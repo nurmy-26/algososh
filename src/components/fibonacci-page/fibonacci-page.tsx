@@ -45,3 +45,5 @@ export const FibonacciPage: React.FC = () => {
     </SolutionLayout>
   );
 };
+
+// todo - постараться отделить алгоритм от setState (и уже тогда добавить проверку, монтирован ли компонент)
