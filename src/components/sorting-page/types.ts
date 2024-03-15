@@ -1,9 +1,17 @@
-import { ElementStates } from "../../types/element-states";
-
-
-export type TColumn = {
-  value: number;
-  color: ElementStates;
+export type TStep = {
+  trav1: number,
+  trav2: number,
+  sorted: number[],
+  arr: number[]
 }
 
-export type TClickedState = 'asc' | 'desc' | '';
+export enum ClickedState {
+  ASC = 'asc',
+  DESC = 'desc',
+  EMPTY = ''
+}
+
+export enum SortTypes {
+  Min = 'min',
+  Max = 'max'
+}

@@ -1,121 +1,118 @@
-import { ElementStates } from "../../types/element-states";
-import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
-import { setDelay, swap } from "../../utils/helpers";
-import { TClickedState, TColumn } from "./types";
+import { swap } from "../../utils/helpers";
+import { SortTypes } from "./types";
 
 
 // сортировка выбором
-export const makeSelectionSort = async (
-  arr: TColumn[], 
-  setColumns: (columns: TColumn[]) => void, 
-  setClicked: (isClicked: TClickedState) => void,
-  type: 'min' | 'max',
-  delay = SHORT_DELAY_IN_MS,
-  states = ElementStates
-  ) => {
-
+export const makeSelectionSort = (arr: number[], type: SortTypes) => {
   const { length } = arr;
+  const result = [];
+  const sortedInd: number[] = [];
   
   for (let i = 0; i < length - 1; i++) {
-    arr[i].color = states.Changing; // подсвечиваем розовым первый неотсортированный эл-т
 
     // сортировка ПО УБЫВАНИЮ (от большего) -----------------------------
-    if (type === 'max') {
+    if (type === SortTypes.Max) {
       let maxIndex = i;
 
       for (let j = i + 1; j < length; j++) {
-        arr[j].color = states.Changing; // подсвечиваем розовым перебираемый эл-т
-        setColumns([...arr]);
-        // интервал между свапами
-        await setDelay(delay);
+        // записываем снапшот значений перед изменениями
+        result.push({
+          trav1: i,
+          trav2: j,
+          sorted: [...sortedInd],
+          arr: [...arr]
+        });
 
         // находим индекс максимального элемента и записываем в maxIndex
-        if (arr[j].value > arr[maxIndex].value) {
+        if (arr[j] > arr[maxIndex]) {
           maxIndex = j;
         }
-        arr[j].color = states.Default; // пройдя весь массив, текущий эл-т снова становится синим
-        setColumns([...arr]); 
       }
 
       // меняем местами текущий эл-т (первый неотсортированный) с максимальным
       swap(arr, maxIndex, i);
-      arr[maxIndex].color = states.Default; // возвращаем бывшему первому н/сорт синий цвет
     }
 
     // сортировка ПО ВОЗРАСТАНИЮ (от меньшего) --------------------------
-    if (type === 'min') {
+    if (type === SortTypes.Min) {
       let minIndex = i;
       for (let j = i + 1; j < length; j++) {
-        arr[j].color = states.Changing;
-        setColumns([...arr]);
-        await setDelay(delay);
+        // записываем снапшот значений перед изменениями
+        result.push({
+          trav1: i,
+          trav2: j,
+          sorted: [...sortedInd],
+          arr: [...arr]
+        });
 
         // находим индекс минимального элемента и записываем в minIndex
-        if (arr[j].value < arr[minIndex].value) {
+        if (arr[j] < arr[minIndex]) {
           minIndex = j;
         }
-        arr[j].color = states.Default;
-        setColumns([...arr]); 
       }
       // меняем местами текущий эл-т (первый неотсортированный) с минимальным
       swap(arr, minIndex, i);
-      arr[minIndex].color = states.Default;
     }
 
-    arr[i].color = states.Modified;
-    setColumns([...arr]);
+    // в конце каждого цикла пополняем массив отсортированных индексов
+    sortedInd.push(i);
   }
 
-  arr[length - 1].color = states.Modified;
-  setColumns([...arr]);
+  sortedInd.push(length - 1);
+  // записываем снапшот значений после цикла
+  result.push({
+    trav1: -1,
+    trav2: -1,
+    sorted: [...sortedInd],
+    arr: [...arr]
+  });
 
-  setClicked('');
+  return result;
 }
 
 
 // сортировка пузырьком
-export const makeBubbleSort = async (
-  arr: TColumn[], 
-  setColumns: (columns: TColumn[]) => void, 
-  setClicked: (isClicked: TClickedState) => void, 
-  type: 'min' | 'max',
-  delay = SHORT_DELAY_IN_MS,
-  states = ElementStates
-  ) => {
-    
+export const makeBubbleSort = (arr: number[], type: SortTypes) => {
   const { length } = arr;
+  const result = [];
+  const sortedInd: number[] = [];
   
   // i - счетчик проходов по массиву
   for (let i = 0; i < length; i++) {  
     for (let j = 0; j < (length - i - 1); j++) {
-
-      arr[j].color = states.Changing;
-      arr[j+1].color = states.Changing;
-      setColumns([...arr]);
-
-      await setDelay(delay);
+      // записываем снапшот значений перед изменениями
+      result.push({
+        trav1: j,
+        trav2: j+1,
+        sorted: [...sortedInd],
+        arr: [...arr]
+      });
 
       // сортировка ПО УБЫВАНИЮ (от большего) -----------------------------
-      if (type === 'max') {
-        if (arr[j].value < arr[j + 1].value) {
+      if (type === SortTypes.Max) {
+        if (arr[j] < arr[j + 1]) {
           swap(arr, j, j+1);
         }
       }
 
       // сортировка ПО ВОЗРАСТАНИЮ (от меньшего) --------------------------
-      if (type === 'min') {
-        if (arr[j].value > arr[j + 1].value) {
+      if (type === SortTypes.Min) {
+        if (arr[j] > arr[j + 1]) {
           swap(arr, j, j+1);
         }
       }
 
-      arr[j].color = states.Default;
-      setColumns([...arr]);
     }
-    arr[length - i - 1].color = states.Modified;
-    setColumns([...arr]);
+    sortedInd.push(length - i - 1);
   }
 
+  // записываем снапшот значений после цикла
+  result.push({
+    trav1: -1,
+    trav2: -1,
+    sorted: [...sortedInd],
+    arr: [...arr]
+  });
 
-  setClicked('');
+  return result;
 }
