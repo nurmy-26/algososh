@@ -1,14 +1,24 @@
-import { TCircle } from "./types";
+import { swap } from "../../utils/helpers";
 
 
-// алгоритм получения массива шагов (индексов тех эл-в, которые будут меняться на каждом шаге)
-const reverseArray = (arr: TCircle[]) => {
-  const result = [];
+// алгоритм получения массива шагов (слепки развернутой строки на каждом шаге)
+const getReversedStringStepArrays = (string: string) => {
+  const arr = string.split('');
+  const result = [[...arr]];
+
+  // для одного элемента свап не нужен
+  if (string.length === 1) {
+    return result;
+  }
+
   let start = 0;
   let end = arr.length - 1;
   
   while (start <= end) {
-    result.push({ start, end });
+    // меняем элементы местами
+    swap(arr, start, end);
+    // записываем текущий массив в массив шагов
+    result.push([...arr]);
 
     start++;
     end--;
@@ -17,4 +27,4 @@ const reverseArray = (arr: TCircle[]) => {
   return result;
 };
 
-export default reverseArray;
+export default getReversedStringStepArrays;

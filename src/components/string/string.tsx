@@ -10,8 +10,7 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
-import { TCircle } from "./types";
-import reverseArray from "./algorithm";
+import getReversedStringStepArrays from "./algorithm";
 
 
 export const StringComponent: React.FC = () => {
@@ -19,42 +18,37 @@ export const StringComponent: React.FC = () => {
   const { values, onChange } = useForm({ 'string': ''});
   const { isLoading, setLoading } = useLoading(false);
   // state для отслеживания изменений в массиве и ререндера кругов
-  const [circles, setCircles] = useState<Array<TCircle>>([]);
+  const [circles, setCircles] = useState<Array<string>>([]);
+  const [step, setStep] = useState(0);
 
   const handleClick = async () => {
     setLoading(true);
 
-    // берем строку из инпута (и добавляем каждому символу начальный цвет)
-    const circleRows = values["string"].split('').map((letter) => ({sign: letter, color: ElementStates.Default}))
-    // с помощью алгоритма получаем массив шагов (индексы изменяемых эл-в)
-    const stepList = reverseArray(circleRows);
+    // с помощью алгоритма получаем массив шагов (снапшоты строки между свапами)
+    const stepList = getReversedStringStepArrays(values["string"]);
+    setStep(0); // для сброса счетчика при повторном запуске
 
-    // производим разворот строки
+    // исп-ть step для while step < stepList.length не получится, так как setState не меняет состояние использующегося кода
     for (let i = 0; i < stepList.length; i++) {
-      const startIndex = stepList[i]['start'];
-      const endIndex = stepList[i]['end'];
+      // рендерим круги, проходя по массиву шагов с задержкой
+      setCircles([...stepList[i]]);
 
-      // для одного элемента свап не нужен
-      if (circleRows.length > 1) {
-        // шаг до свапа - значения кругов еще прежние, цвет - розовый
-        circleRows[startIndex].color = ElementStates.Changing;
-        circleRows[endIndex].color = ElementStates.Changing;
-        setCircles([...circleRows]);
-
-        // интервал между свапами
-        await setDelay(DELAY_IN_MS);
-        if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
-
-        // свап
-        swap(circleRows, startIndex, endIndex);
-      }
-      // поменявшиеся круги становятся зелеными
-      circleRows[startIndex].color = ElementStates.Modified;
-      circleRows[endIndex].color = ElementStates.Modified;
-      setCircles([...circleRows]); 
+      await setDelay(DELAY_IN_MS);
+      if (!isMounted.current) return; // если компонент размонтирован - прерываем ф-ю
+      setStep(prevStep => prevStep + 1);
     }
 
     setLoading(false);
+  }
+
+  // вместо перезаписи цвета на каждом шаге цвет будет вычисляться в зависимости от условий
+  const getCircleColor = (index: number, maxIndex: number) => {
+    // зеленый - для уже измененных
+    return (index < step || index > (maxIndex - step)) ? ElementStates.Modified 
+      // розовый - для start и end элементов на каждом шаге
+      : (index === step || index === (maxIndex - step)) ? ElementStates.Changing 
+      // все остальные - дефолтный цвет
+      : ElementStates.Default;
   }
 
   
@@ -69,7 +63,7 @@ export const StringComponent: React.FC = () => {
     <ul className={styles.string}>
       {circles.map((item, index) => 
         <li key={index}>
-          <Circle letter={item.sign} state={item.color} />
+          <Circle letter={item} state={getCircleColor(index, circles.length - 1)} />
         </li>
       )}
     </ul>
