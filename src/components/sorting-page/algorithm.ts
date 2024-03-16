@@ -3,7 +3,7 @@ import { SortTypes } from "./types";
 
 
 // сортировка выбором
-export const makeSelectionSort = (arr: number[], type: SortTypes) => {
+export const makeSelectionSortSteps = (arr: number[], type: SortTypes) => {
   const { length } = arr;
   const result = [];
   const sortedInd: number[] = [];
@@ -72,7 +72,7 @@ export const makeSelectionSort = (arr: number[], type: SortTypes) => {
 
 
 // сортировка пузырьком
-export const makeBubbleSort = (arr: number[], type: SortTypes) => {
+export const makeBubbleSortSteps = (arr: number[], type: SortTypes) => {
   const { length } = arr;
   const result = [];
   const sortedInd: number[] = [];

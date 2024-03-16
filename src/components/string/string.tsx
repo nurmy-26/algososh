@@ -4,7 +4,7 @@ import { ElementStates } from "../../types/element-states";
 import useMounted from "../../utils/hooks/useMounted";
 import useForm from "../../utils/hooks/useForm";
 import useLoading from "../../utils/hooks/useLoading";
-import { setDelay, swap } from "../../utils/helpers";
+import { setDelay } from "../../utils/helpers";
 import { DELAY_IN_MS } from "../../utils/constants/delays";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Button } from "../ui/button/button";

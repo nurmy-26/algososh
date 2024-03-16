@@ -15,7 +15,7 @@ import { TCircle, TClickedState } from "./types";
 import List from "./List";
 
 
-// todo - перенести в helpers и заменить в других местах
+// todo - перенести в helpers и заменить в других местах или сделать назначение цвета по условию
 const itemWithNewIndex = (item: TCircle, newIndex: number) => {
   return { ...item, index: newIndex };
 }

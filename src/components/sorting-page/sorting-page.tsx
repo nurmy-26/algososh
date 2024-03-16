@@ -10,7 +10,7 @@ import { RadioInput } from "../ui/radio-input/radio-input";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
 import { SortTypes, ClickedState, TStep } from "./types";
-import { makeBubbleSort, makeSelectionSort } from "./algorithm";
+import { makeBubbleSortSteps, makeSelectionSortSteps } from "./algorithm";
 
 
 export const SortingPage: React.FC = () => {
@@ -39,9 +39,9 @@ export const SortingPage: React.FC = () => {
 
     // с помощью алгоритма получаем массив шагов (снапшоты между свапами)
     if (sortType === 'selection') {
-      stepList = makeSelectionSort(columns, SortTypes.Min);
+      stepList = makeSelectionSortSteps(columns, SortTypes.Min);
     } else {
-      stepList = makeBubbleSort(columns, SortTypes.Min);
+      stepList = makeBubbleSortSteps(columns, SortTypes.Min);
     }
     
     // рендерим столбцы, проходя по массиву шагов с задержкой
@@ -64,9 +64,9 @@ export const SortingPage: React.FC = () => {
     setStep(initialStep);
 
     if (sortType === 'selection') {
-      stepList = makeSelectionSort(columns, SortTypes.Max);
+      stepList = makeSelectionSortSteps(columns, SortTypes.Max);
     } else {
-      stepList = makeBubbleSort(columns, SortTypes.Max);
+      stepList = makeBubbleSortSteps(columns, SortTypes.Max);
     }
 
     for (let i = 0; i < stepList.length; i++) {

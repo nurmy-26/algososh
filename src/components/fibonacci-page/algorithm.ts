@@ -1,33 +1,16 @@
-import { SHORT_DELAY_IN_MS } from "../../utils/constants/delays";
-import { setDelay } from "../../utils/helpers";
+// алгоритм получения n чисел Фибоначчи после первой единицы
+const getFibonacciSeries = (n: number) => {
+  let result = [1, 1];
+  
+  if (n <= 1) {
+    return result;
+  }
 
-
-// алгоритм выведения n чисел Фибоначчи после первой единицы
-const fibonacciIterative = async (
-  n: number, 
-  setCircles: (arr: number[]) => void, 
-  setLoading: (isLoading: boolean) => void,
-  delay = SHORT_DELAY_IN_MS
-  ) => {
-  let arr = [1, 1];
-
-  // рендер первого круга
-  setCircles([1]);
-
-  // рендер второго круга
-  await setDelay(delay);
-  setCircles([...arr]);
-
-  // рендер последующих кругов
   for (let i = 2; i < n + 1; i++) {
-    arr.push(arr[i-2] + arr[i-1]);
-
-    // интервал между свапами
-    await setDelay(delay);
-    setCircles([...arr]);
+    result.push(result[i-2] + result[i-1]);
   }
   
-  setLoading(false);
+  return result;
 };
 
-export default fibonacciIterative;
+export default getFibonacciSeries;
