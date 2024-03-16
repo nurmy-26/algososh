@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./input.module.css";
+import { getWordEnding } from "../../../utils/helpers";
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {
   placeholder?: string;
@@ -18,7 +19,7 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const limitText =
     type === "text"
-      ? `Максимум — ${maxLength} символа`
+      ? `Максимум — ${maxLength} ${getWordEnding(maxLength, 'символ', 'символа', 'символов')}`
       : `Максимальное число — ${max}`;
 
   return (

@@ -1,0 +1,50 @@
+.container {
+  max-width: 952px;
+  min-height: 158px;
+  display: flex;
+  gap: calc(var(--offset-base-size)*6);
+  margin: 0 auto 56px;
+}
+
+.input input {
+  max-width: 204px;
+  padding: 18px 16px;
+}
+
+.btns_box {
+  display: grid;
+  grid-template-areas:
+    "btn1 btn2"
+    "btn3 btn3";
+  grid-template-rows: auto auto;
+  grid-template-columns: repeat(2, 175px);
+  gap: 38px 12px;
+  max-width: 362px;
+}
+.btn1 {
+  grid-area: btn1;
+}
+.btn2 {
+  grid-area: btn2;
+}
+.btn3 {
+  grid-area: btn3;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  min-height: 204px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--offset-base-size)*8);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--offset-base-size)*8);
+}

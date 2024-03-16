@@ -1,0 +1,20 @@
+.container {
+  max-width: 567px;
+  display: flex;
+  gap: calc(var(--offset-base-size)*6);
+  margin: 0 auto 120px;
+}
+
+.btn {
+  min-width: 178px;
+}
+
+.string {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--offset-base-size)*8);
+}
