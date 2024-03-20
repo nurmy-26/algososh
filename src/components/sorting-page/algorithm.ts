@@ -58,7 +58,7 @@ export const makeSelectionSortSteps = (arr: number[], type: SortTypes) => {
     sortedInd.push(i);
   }
 
-  sortedInd.push(length - 1);
+  if (length !== 0) { sortedInd.push(length - 1); }
   // записываем снапшот значений после цикла
   result.push({
     trav1: -1,
