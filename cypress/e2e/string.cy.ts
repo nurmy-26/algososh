@@ -1,4 +1,4 @@
-import { COLOR_CHANGING, COLOR_DEFAULT } from "../support/constants";
+import { COLOR_CHANGING, COLOR_DEFAULT, COLOR_MODIFIED } from "../support/constants";
 
 
 describe('String Page', () => {
@@ -29,5 +29,14 @@ describe('String Page', () => {
     cy.get('@circle-0').should('have.text', 'a').and('have.css', 'border-color', COLOR_CHANGING);
     cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_DEFAULT);
     cy.get('@circle-2').should('have.text', 'c').and('have.css', 'border-color', COLOR_CHANGING);
+
+    // проверяем корректность разворота на 2м шаге анимации
+    // wait не нужен в соответствии с best-practices (cypress сам дождется изменений, если они в пределах 4с)
+    cy.get('@circle-0').should('have.text', 'c').and('have.css', 'border-color', COLOR_MODIFIED);
+    cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_CHANGING);
+    cy.get('@circle-2').should('have.text', 'a').and('have.css', 'border-color', COLOR_MODIFIED);
+
+    // проверяем корректность разворота на 3м шаге анимации
+    cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_MODIFIED);
   });
 })
