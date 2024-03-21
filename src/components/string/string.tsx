@@ -60,7 +60,7 @@ export const StringComponent: React.FC = () => {
       <Button isLoader={isLoading} disabled={!values["string"]} extraClass={styles.btn} text="Развернуть" onClick={handleClick} /> 
     </div>
 
-    <ul className={styles.string}>
+    <ul data-cy="list" className={styles.string}>
       {circles.map((item, index) => 
         <li key={index}>
           <Circle letter={item} state={getCircleColor(index, circles.length - 1)} />
