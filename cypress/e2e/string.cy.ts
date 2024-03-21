@@ -12,6 +12,9 @@ describe('String Page', () => {
   });
 
   it('Строка корректно разворачивается', () => {
+    // до нажатия на кнопку список пуст
+    cy.get('ul').find('li').should('not.exist');
+
     const inputText = 'abc';
     const inputLength = inputText.length;
 
