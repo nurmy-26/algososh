@@ -10,38 +10,26 @@ describe('Роутинг', () => {
 
 
   it('Переход на страницу разворота строки и обратно', () => {
-    cy.get('[data-cy="recursion"]').click();
-    cy.location('pathname').should('eq', '/recursion');
-    cy.get('h3').should('have.text', 'Строка');
+    cy.navigateAndCheckRoute('recursion', 'Строка');
   });
 
   it('Переход на страницу с рядом Фибоначчи и обратно', () => {
-    cy.get('[data-cy="fibonacci"]').click();
-    cy.location('pathname').should('eq', '/fibonacci');
-    cy.get('h3').should('have.text', 'Последовательность Фибоначчи');
+    cy.navigateAndCheckRoute('fibonacci', 'Последовательность Фибоначчи');
   });
 
   it('Переход на страницу с сортировкой массива и обратно', () => {
-    cy.get('[data-cy="sorting"]').click();
-    cy.location('pathname').should('eq', '/sorting');
-    cy.get('h3').should('have.text', 'Сортировка массива');
+    cy.navigateAndCheckRoute('sorting', 'Сортировка массива');
   });
 
   it('Переход на страницу стека и обратно', () => {
-    cy.get('[data-cy="stack"]').click();
-    cy.location('pathname').should('eq', '/stack');
-    cy.get('h3').should('have.text', 'Стек');
+    cy.navigateAndCheckRoute('stack', 'Стек');
   });
 
   it('Переход на страницу очереди и обратно', () => {
-    cy.get('[data-cy="queue"]').click();
-    cy.location('pathname').should('eq', '/queue');
-    cy.get('h3').should('have.text', 'Очередь');
+    cy.navigateAndCheckRoute('queue', 'Очередь');
   });
 
   it('Переход на страницу связного списка и обратно', () => {
-    cy.get('[data-cy="list"]').click();
-    cy.location('pathname').should('eq', '/list');
-    cy.get('h3').should('have.text', 'Связный список');
+    cy.navigateAndCheckRoute('list', 'Связный список');
   });
 })

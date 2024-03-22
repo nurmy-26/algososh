@@ -7,13 +7,13 @@ describe('String Page', () => {
   });
 
   it('Кнопка добавления недоступна при пустом инпуте', () => {
-    cy.get('input').should('not.have.value');
-    cy.get('button').should('be.disabled');
+    cy.checkIfInputHaveNoValue();
+    cy.checkIfButtonDisabled('Развернуть');
   });
 
   it('Строка корректно разворачивается', () => {
     // до нажатия на кнопку список пуст
-    cy.get('ul').find('li').should('not.exist');
+    cy.getCircleList().should('not.exist');
 
     const inputText = 'abc';
     const inputLength = inputText.length;
@@ -21,10 +21,10 @@ describe('String Page', () => {
     cy.get('input').type(inputText);
     cy.get('button').contains('Развернуть').click();
 
-    // даем псевдоним списку и проверяем, что его длина соответствует длине введенной строки
-    cy.get('[data-cy=list]').find('li').as('circleList').should('have.length', inputLength);
+    // проверяем, что длина списка соответствует длине введенной строки
+    cy.checkListLength(inputLength);
     // даем псевдоним каждому кругу из списка
-    cy.get('@circleList').each((item, index) => {
+    cy.getCircleList().each((item, index) => {
       cy.wrap(item).find('div > div:nth-child(2)').as(`circle-${index}`);
     })
 

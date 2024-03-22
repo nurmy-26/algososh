@@ -7,18 +7,18 @@ describe('Stack Page', () => {
     cy.visit('stack');
 
     // перед манипуляциями со стеком убеждаемся, что он пуст
-    cy.get('ul').find('li').should('not.exist');
+    cy.getCircleList().should('not.exist');
     // а инпут не заблокирован
     cy.get('input').should('not.have.attr', 'disabled');
   });
 
   it('При пустом инпуте кнопки недоступны', () => {
-    cy.get('input').should('not.have.value');
-    cy.get('button').contains('Добавить').parent().should('be.disabled');
+    cy.checkIfInputHaveNoValue();
+    cy.checkIfButtonDisabled('Добавить');
 
     // так как стек еще пуст, остальные кнопки также должныбыть недоступны
-    cy.get('button').contains('Удалить').parent().should('be.disabled');
-    cy.get('button').contains('Очистить').parent().should('be.disabled');
+    cy.checkIfButtonDisabled('Удалить');
+    cy.checkIfButtonDisabled('Очистить');
   });
 
 
@@ -31,13 +31,13 @@ describe('Stack Page', () => {
       cy.get('button').contains('Добавить').click();
 
       // на каждом шаге длина стека равна числу добавленных элементов
-      cy.get('ul').find('li').should('have.length', i+1);
+      cy.checkListLength(i+1);
 
       // на 1м шаге у текущего добавляемого элемента есть надпись top и совпадают текст в круге и индекс
-      cy.get('ul').find('li').eq(i)
+      cy.getCircleList().eq(i)
         .should('have.text', `top${i}${i}`);
       // а цвет круга - розовый
-      cy.get('ul').find('li').find('div > div:nth-child(2)').eq(i).as('circle')
+      cy.getCircleList().find('div > div:nth-child(2)').eq(i).as('circle')
         .should('have.text', `${i}`).and('have.css', 'border-color', COLOR_CHANGING);
 
       // на 2м шаге меняется только цвет
@@ -45,7 +45,7 @@ describe('Stack Page', () => {
     }
 
     // в конце проверяем, что длина списка соответствует кол-ву введенных элементов
-    cy.get('ul').find('li').should('have.length', numTests);
+    cy.checkListLength(numTests);
   });
 
 
@@ -59,35 +59,35 @@ describe('Stack Page', () => {
       cy.get('button').contains('Добавить').click();
 
       // проверяем, что круг после добавления стал синим, чтоб не нарушить последующих тестов
-      cy.get('ul').find('li').eq(i).find('div > div:nth-child(2)')
+      cy.getCircleList().eq(i).find('div > div:nth-child(2)')
       .should('have.css', 'border-color', COLOR_DEFAULT);
     }
 
     // проверяем, что длина списка соответствует кол-ву введенных элементов
-    cy.get('ul').find('li').should('have.length', numItems);
+    cy.checkListLength(numItems);
 
     for (let i = 0; i < numItems; i++) {
       cy.get('button').contains('Удалить').click();
       
       // 1й шаг удаления - круг розовый
-      cy.get('ul').find('li').eq(numItems - (i + 1)).find('div > div:nth-child(2)')
+      cy.getCircleList().eq(numItems - (i + 1)).find('div > div:nth-child(2)')
         .should('have.css', 'border-color', COLOR_CHANGING);
 
       // пока не дойдем до последнего элемента:
       if (i < numItems - 1) {
         // на 2м шаге - надпись top перемещается
-        cy.get('ul').find('li').eq(numItems - (i + 2)).find('div > div').first()
+        cy.getCircleList().eq(numItems - (i + 2)).find('div > div').first()
         .should('have.text', 'top');
-        cy.get('ul').find('li').eq(numItems - (i + 2)).find('div > div:nth-child(2)')
+        cy.getCircleList().eq(numItems - (i + 2)).find('div > div:nth-child(2)')
         .should('have.css', 'border-color', COLOR_DEFAULT);
       }
 
       // на каждом шаге проверяем, что длина стека сокращается
-      cy.get('ul').find('li').should('have.length', numItems - (i+1));
+      cy.checkListLength(numItems - (i+1));
     }
 
     // после удаления всех элементов стек должен остаться пустым
-    cy.get('ul').find('li').should('not.exist');
+    cy.getCircleList().should('not.exist');
   });
 
 
@@ -101,12 +101,12 @@ describe('Stack Page', () => {
       cy.get('button').contains('Добавить').click();
       
       // каждый раз дожидаемся, чтобы круг стал синим, для корректности анимаций
-      cy.get('ul').find('li').eq(i).find('div > div:nth-child(2)')
+      cy.getCircleList().eq(i).find('div > div:nth-child(2)')
       .should('have.css', 'border-color', COLOR_DEFAULT);
     }
 
     cy.get('button').contains('Очистить').click();
     // после удаления всех элементов стек должен остаться пустым
-    cy.get('ul').find('li').should('not.exist');
+    cy.getCircleList().should('not.exist');
   });
 })
