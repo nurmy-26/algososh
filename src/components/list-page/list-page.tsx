@@ -29,7 +29,10 @@ export const ListPage: React.FC = () => {
   const { values, onChange, clearForm } = useForm({ 'value': '', 'ind': ''});
   const [isClicked, setClicked] = useState<TClickedState>('');
   
-  const initialList = getRandomArr({min: 3, max: 5}, {min: 0, max: 99}).map((item) => (
+  // const initialList = getRandomArr({min: 3, max: 5}, {min: 0, max: 99}).map((item) => (
+  //   { value: item.toString(), color: ElementStates.Default }));
+  // для тестов нужен конкретный начальный список:
+  const initialList = [0, 34, 8, 1].map((item) => (
     { value: item.toString(), color: ElementStates.Default }));
   const [list] = useState(new List<TCircle>(initialList));
   const initialCircles = list.array;
