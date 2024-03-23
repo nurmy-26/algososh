@@ -1,6 +1,13 @@
 import { ElementStates } from "../../types/element-states";
 
 
+export enum ClickedState {
+  ADD = 'add',
+  DEL = 'delete',
+  CLEAR = 'clead',
+  EMPTY = ''
+}
+
 export type TCircle = {
   value: string;
   color: ElementStates;

@@ -56,7 +56,7 @@ export const StringComponent: React.FC = () => {
     <SolutionLayout title="Строка">
 
     <div className={styles.container}>
-      <Input isLimitText={true} maxLength={11} name="string" onChange={onChange} />
+      <Input isLimitText={true} maxLength={11} name="string" value={values['string']} onChange={onChange} />
       <Button isLoader={isLoading} disabled={!values["string"]} extraClass={styles.btn} text="Развернуть" onClick={handleClick} /> 
     </div>
 
