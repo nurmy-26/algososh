@@ -1,4 +1,5 @@
-import { COLOR_CHANGING, COLOR_DEFAULT, COLOR_MODIFIED } from "../support/constants";
+import { BIG_CIRCLE_SELECTOR, COLOR_CHANGING, COLOR_DEFAULT,
+   COLOR_MODIFIED, EXPAND_BTN_NAME } from "../support/constants";
 
 
 describe('String Page', () => {
@@ -8,7 +9,7 @@ describe('String Page', () => {
 
   it('Кнопка добавления недоступна при пустом инпуте', () => {
     cy.checkIfInputHaveNoValue();
-    cy.checkIfButtonDisabled('Развернуть');
+    cy.checkIfButtonDisabled(EXPAND_BTN_NAME);
   });
 
   it('Строка корректно разворачивается', () => {
@@ -18,28 +19,28 @@ describe('String Page', () => {
     const inputText = 'abc';
     const inputLength = inputText.length;
 
-    cy.get('input').type(inputText);
-    cy.get('button').contains('Развернуть').click();
+    cy.typeOnInput(inputText);
+    cy.clickBtn(EXPAND_BTN_NAME);
 
     // проверяем, что длина списка соответствует длине введенной строки
     cy.checkListLength(inputLength);
     // даем псевдоним каждому кругу из списка
     cy.getCircleList().each((item, index) => {
-      cy.wrap(item).find('div > div:nth-child(2)').as(`circle-${index}`);
+      cy.wrap(item).find(BIG_CIRCLE_SELECTOR).as(`circle-${index}`);
     })
 
     // проверяем корректность разворота на 1м шаге анимации
-    cy.get('@circle-0').should('have.text', 'a').and('have.css', 'border-color', COLOR_CHANGING);
-    cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_DEFAULT);
-    cy.get('@circle-2').should('have.text', 'c').and('have.css', 'border-color', COLOR_CHANGING);
+    cy.checkCircleTextAndColor(0, 'a', COLOR_CHANGING);
+    cy.checkCircleTextAndColor(1, 'b', COLOR_DEFAULT);
+    cy.checkCircleTextAndColor(2, 'c', COLOR_CHANGING);
 
     // проверяем корректность разворота на 2м шаге анимации
     // wait не нужен в соответствии с best-practices (cypress сам дождется изменений, если они в пределах 4с)
-    cy.get('@circle-0').should('have.text', 'c').and('have.css', 'border-color', COLOR_MODIFIED);
-    cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_CHANGING);
-    cy.get('@circle-2').should('have.text', 'a').and('have.css', 'border-color', COLOR_MODIFIED);
+    cy.checkCircleTextAndColor(0, 'c', COLOR_MODIFIED);
+    cy.checkCircleTextAndColor(1, 'b', COLOR_CHANGING);
+    cy.checkCircleTextAndColor(2, 'a', COLOR_MODIFIED);
 
     // проверяем корректность разворота на 3м шаге анимации
-    cy.get('@circle-1').should('have.text', 'b').and('have.css', 'border-color', COLOR_MODIFIED);
+    cy.checkCircleTextAndColor(1, 'b', COLOR_MODIFIED);
   });
 })

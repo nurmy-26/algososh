@@ -5,13 +5,29 @@ declare namespace Cypress {
   interface Chainable {
     navigateAndCheckRoute(name: string, headerText: string): Chainable;
 
+    getInput(): Chainable<JQuery<HTMLElement>>;
+    typeOnInput(inputText: string): Chainable<JQuery<HTMLElement>>;
+    getBtn(): Chainable<JQuery<HTMLElement>>;
+    clickBtn(btnName: string | RegExp): Chainable<JQuery<HTMLElement>>;
+
     checkIfInputHaveNoValue(havePlaceholder?: string): Chainable<Element>;
     checkIfButtonDisabled(buttonText: string): Chainable<Element>;
     checkIfAllButtonsDisabled(buttonText: string): Chainable<Element>;
 
     getCircleList(): Chainable<JQuery<HTMLElement>>;
     checkListLength(expectedLength: number): Chainable<JQuery<HTMLElement>>;
-    checkIfQueueCirclesAreEmpty: () => void;
+    checkFilledCirclesLength(expectedLength: number): Chainable<JQuery<HTMLElement>>;
+    checkIfQueueCirclesAreEmpty(): Chainable<JQuery<HTMLElement>>;
+
+    checkCircleTextAndColor(circleNumber: number, text: string, color: string): Chainable<Element>;
+
+    addItemsWithForCycle(
+      numItems: number,
+      bigCircleSelector: string,
+      defaultColor: string,
+      checkOnlyFilledCircles?: boolean,
+      extraActions?: (i: number) => void
+    ): Chainable<Element>;
 
     addListItem(
       startLength: number,
@@ -23,7 +39,7 @@ declare namespace Cypress {
       modifiedColor: string,
       haveTypedIndex?: boolean
     ): Chainable<Element>;
-    removeItem(
+    removeListItem(
       startLength: number, 
       indexValue: number,
       buttonName: string,
@@ -33,45 +49,108 @@ declare namespace Cypress {
   }
 }
 
+// навигация
 Cypress.Commands.add('navigateAndCheckRoute', (name, headerText) => {
   cy.get(`[data-cy="${name}"]`).click();
   cy.location('pathname').should('eq', `/${name}`);
   cy.get('h3').should('have.text', headerText);
 });
 
-Cypress.Commands.add('checkIfInputHaveNoValue', (havePlaceholder = '') => {
-  if (havePlaceholder !== '') {
-    cy.get(`input[placeholder="${havePlaceholder}"]`).should('not.have.value');
-  } else {
-    cy.get('input').should('not.have.value');
-  }
+// простые действия
+Cypress.Commands.add('getInput', () => {
+  return cy.get('input')
 });
-
-Cypress.Commands.add('checkIfButtonDisabled', (buttonText: string) => {
-  cy.get('button').contains(buttonText).parent().should('be.disabled');
+Cypress.Commands.add('typeOnInput', (inputText) => {
+  cy.getInput().type(inputText);
 });
-Cypress.Commands.add('checkIfAllButtonsDisabled', (buttonText: string) => {
-  cy.get('button').filter(`:contains("${buttonText}")`).each((button) => {
-    cy.wrap(button).should('be.disabled');
-  });
+Cypress.Commands.add('getBtn', () => {
+  return cy.get('button')
 });
-
+Cypress.Commands.add('clickBtn', (btnName) => {
+  cy.get('button').contains(btnName).click();
+});
 Cypress.Commands.add('getCircleList', () => {
   return cy.get('ul').find('li')
 });
 
-Cypress.Commands.add('checkListLength', (expectedLength: number) => {
+
+// простые проверки
+
+Cypress.Commands.add('checkIfInputHaveNoValue', (havePlaceholder = '') => {
+  if (havePlaceholder !== '') {
+    cy.get(`input[placeholder="${havePlaceholder}"]`).should('not.have.value');
+  } else {
+    cy.getInput().should('not.have.value');
+  }
+});
+
+Cypress.Commands.add('checkIfButtonDisabled', (buttonText) => {
+  cy.getBtn().contains(buttonText).parent().should('be.disabled');
+});
+Cypress.Commands.add('checkIfAllButtonsDisabled', (buttonText) => {
+  cy.getBtn().filter(`:contains("${buttonText}")`).each((button) => {
+    cy.wrap(button).should('be.disabled');
+  });
+});
+
+Cypress.Commands.add('checkListLength', (expectedLength) => {
   cy.get('ul').find('li').should('have.length', expectedLength);
+});
+Cypress.Commands.add('checkFilledCirclesLength', (expectedLength) => {
+  // проверяем количество больших кругов с текстов (т.е. заполненных)
+  cy.get('ul').find('li > div > div:nth-child(2) > p:not(:empty)').should('have.length', expectedLength);
 });
 
 Cypress.Commands.add('checkIfQueueCirclesAreEmpty', () => {
   cy.get('ul').find('li').each((li) => {
     cy.wrap(li).find('p').first().should('have.text', '');
-    cy.wrap(li).find('div > div').should('have.text', '');
+    cy.wrap(li).find('div > div:not(:nth-child(3))').each((circle) => {
+      cy.wrap(circle).should('have.text', '');
+    });
   });
 });
 
+Cypress.Commands.add('checkCircleTextAndColor', (circleNumber, text, color) => {
+  cy.get(`@circle-${circleNumber}`).should('have.text', text)
+    .and('have.css', 'border-color', color);
+});
 
+
+// комплексные команды
+
+// добавить элементы в стек или очередь с помощью цикла
+Cypress.Commands.add('addItemsWithForCycle', (
+  numItems,
+  bigCircleSelector,
+  defaultColor,
+  checkOnlyFilledCircles = false,
+  extraActions
+  ) => {
+    for (let i = 0; i < numItems; i++) {
+      // для удобства будем заполнять круги соответствующими индексами
+      const inputText = i.toString();
+      cy.typeOnInput(inputText);
+      cy.clickBtn('Добавить');
+
+      // дополнительные проверки при необходимости
+      if (typeof extraActions !== 'undefined') {
+        extraActions(i);
+      }
+
+      // на каждом шаге длина стека равна числу добавленных элементов
+      if (checkOnlyFilledCircles) {
+        cy.checkFilledCirclesLength(i+1);
+      } else {
+        cy.checkListLength(i+1);
+      }
+
+      // проверяем, что круг после добавления стал синим, чтоб не нарушить последующих тестов
+      cy.getCircleList().eq(i).find(bigCircleSelector)
+        .should('have.css', 'border-color', defaultColor);
+    }
+});
+
+// добавить в связный список
 Cypress.Commands.add('addListItem', (
   startLength, 
   inputValue, 
@@ -82,9 +161,10 @@ Cypress.Commands.add('addListItem', (
   modifiedColor,
   haveTypedIndex = false
   ) => {
+    // добавляем элемент
     cy.get('input[placeholder="Введите значение"]').type(inputValue);
     if (haveTypedIndex) { cy.get('input[placeholder="Введите индекс"]').type(indexValue.toString()); }
-    cy.get('button').contains(buttonName).click();
+    cy.clickBtn(buttonName);
 
     cy.checkListLength(startLength);
 
@@ -105,7 +185,8 @@ Cypress.Commands.add('addListItem', (
       .should('have.text', inputValue).parent().should('have.css', 'border-color', defaultColor);
 });
 
-Cypress.Commands.add('removeItem', (
+// удалить из связного списка
+Cypress.Commands.add('removeListItem', (
   startLength, 
   indexValue,
   buttonName,
@@ -115,13 +196,11 @@ Cypress.Commands.add('removeItem', (
   // сохраняем удаляемое значение в переменную перед удалением
   let elementText: string;
   cy.getCircleList().eq(indexValue).find('div > p').first().as('itemP')
-    .then(p => {
-      elementText = p.text();
-    });
+    .then(p => elementText = p.text());
 
   // удаляем
   cy.get('input[placeholder="Введите индекс"]').type(indexValue.toString());
-  cy.get('button').contains(buttonName).click();
+  cy.clickBtn(buttonName);
 
   cy.checkListLength(startLength);
 
@@ -140,7 +219,7 @@ Cypress.Commands.add('removeItem', (
   cy.getCircleList().find('div > div:nth-child(2)').each(circle => {
     cy.wrap(circle).should('have.css', 'border-color', defaultColor);
   });
-  // head отображается над 0 элементом, tail над последним
-  cy.getCircleList().find('div > div').first().should('have.text', 'head');
-  cy.getCircleList().find('div > div').last().should('have.text', 'tail');
+  // head отображается над 0 элементом, tail под последним
+  cy.getCircleList().find('div > div:nth-child(1)').should('have.text', 'head');
+  cy.getCircleList().find('div > div:nth-child(4)').should('have.text', 'tail');
 });

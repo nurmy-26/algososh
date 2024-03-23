@@ -4,7 +4,7 @@ describe('Роутинг', () => {
   });
 
   afterEach(() => {
-    cy.get('button').contains(/к оглавлению/i).click();
+    cy.clickBtn(/к оглавлению/i);
     cy.location('pathname').should('eq', '/');
   });
 

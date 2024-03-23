@@ -1,11 +1,11 @@
-import { COLOR_DEFAULT } from "../support/constants";
+import { BIG_CIRCLE_SELECTOR, COLOR_DEFAULT, COUNT_BTN_NAME } from "../support/constants";
 import { getRandomInt } from "../../src/utils/helpers/random";
 import getFibonacciSeries from "../../src/components/fibonacci-page/algorithm";
 
 
 function checkFibonacciNumbers(maxLength: number) {
   for (let i = 0; i < maxLength; i++) {
-    cy.getCircleList().eq(i).find('div > div:nth-child(2)')
+    cy.getCircleList().eq(i).find(BIG_CIRCLE_SELECTOR)
       .should('have.text', getFibonacciSeries(maxLength)[i]).and('have.css', 'border-color', COLOR_DEFAULT);
   }
 }
@@ -17,7 +17,7 @@ describe('Fibonacci Page', () => {
 
   it('Кнопка добавления недоступна при пустом инпуте', () => {
     cy.checkIfInputHaveNoValue();
-    cy.checkIfButtonDisabled('Рассчитать');
+    cy.checkIfButtonDisabled(COUNT_BTN_NAME);
   });
 
   it('Числа корректно генерируются', () => {
@@ -28,8 +28,8 @@ describe('Fibonacci Page', () => {
     const inputText = getRandomInt(1, 19).toString();
     const maxFibonacciLength = Number(inputText) + 1;
 
-    cy.get('input').type(inputText);
-    cy.get('button').contains('Рассчитать').click();
+    cy.typeOnInput(inputText);
+    cy.clickBtn(COUNT_BTN_NAME);
 
     // проверяем, что длина списка в начале генерации чисел равна 1
     cy.checkListLength(1);

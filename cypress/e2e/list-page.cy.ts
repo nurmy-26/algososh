@@ -1,4 +1,5 @@
-import { COLOR_CHANGING, COLOR_DEFAULT, COLOR_MODIFIED } from "../support/constants";
+import { ADD_BTN_NAME, BIG_CIRCLE_SELECTOR, COLOR_CHANGING, COLOR_DEFAULT, COLOR_MODIFIED, 
+  DOWN_CIRCLE_SELECTOR, UP_CIRCLE_SELECTOR } from "../support/constants";
 
 
 const startArr = [0, 34, 8, 1];
@@ -12,7 +13,7 @@ describe('List Page', () => {
 
   it('При пустом инпуте значения недоступны все кнопки "добавить"', () => {
     cy.checkIfInputHaveNoValue('Введите значение');
-    cy.checkIfAllButtonsDisabled('Добавить');
+    cy.checkIfAllButtonsDisabled(ADD_BTN_NAME);
   });
 
   it('При пустом инпуте индекса недоступны все кнопки "по индексу"', () => {
@@ -23,15 +24,15 @@ describe('List Page', () => {
   it('Правильно отрисовывается дефолтный список', () => {
     // проверяем длину стартового списка и что все кружки синие
     cy.checkListLength(startLength);
-    cy.getCircleList().find('div > div:nth-child(2)')
+    cy.getCircleList().find(BIG_CIRCLE_SELECTOR)
       .should('have.css', 'border-color', COLOR_DEFAULT);
 
     // проверка надписи "head" над первым кружком
-    cy.getCircleList().first().find('div > div').first()
+    cy.getCircleList().first().find(UP_CIRCLE_SELECTOR)
       .should('have.text', 'head');
 
-    // проверка надписи "tail" над последним кружком
-    cy.getCircleList().last().find('div > div').last()
+    // проверка надписи "tail" под последним кружком
+    cy.getCircleList().last().find(DOWN_CIRCLE_SELECTOR)
       .should('have.text', 'tail');
 
     // проверка содержимого каждого кружка
@@ -92,7 +93,7 @@ describe('List Page', () => {
     const indexValue = 0; // так как head - нулевой элемент
     const buttonName = 'Удалить из head';
 
-    cy.removeItem(
+    cy.removeListItem(
       startLength, 
       indexValue, 
       buttonName, 
@@ -105,7 +106,7 @@ describe('List Page', () => {
     const indexValue = startLength - 1; // так как tail - последний элемент
     const buttonName = 'Удалить из tail';
 
-    cy.removeItem(
+    cy.removeListItem(
       startLength, 
       indexValue, 
       buttonName, 
@@ -119,7 +120,7 @@ describe('List Page', () => {
     const indexValue = 2; // индекс для примера
     const buttonName = 'Удалить по индексу';
 
-    cy.removeItem(
+    cy.removeListItem(
       startLength, 
       indexValue, 
       buttonName, 
