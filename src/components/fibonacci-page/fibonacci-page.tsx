@@ -44,7 +44,8 @@ export const FibonacciPage: React.FC = () => {
     <SolutionLayout title="Последовательность Фибоначчи">
 
     <div className={styles.container}>
-      <Input isLimitText={true} max={19} name="number" onChange={onChange} placeholder="Введите число от 1 до 19" type="number" />
+      <Input isLimitText={true} max={19} name="number" value={values['number']} onChange={onChange}
+       placeholder="Введите число от 1 до 19" type="number" />
       <Button isLoader={isLoading} disabled={disabledCondition} extraClass={styles.btn} text="Рассчитать" onClick={handleClick} /> 
     </div>
 

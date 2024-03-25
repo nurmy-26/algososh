@@ -17,8 +17,10 @@ export const SortingPage: React.FC = () => {
   const isMounted = useMounted();
   const [isClicked, setClicked] = useState<ClickedState>(ClickedState.EMPTY);
   const [sortType, setSortType] = useState('selection');
+  // при открытии страницы генерируется случайный массив
+  const initialColumns = getRandomArr();
   // state для отслеживания изменений в массиве и ререндера столбцов
-  const [columns, setColumns] = useState<Array<number>>([]);
+  const [columns, setColumns] = useState<Array<number>>(initialColumns);
   const initialStep = {
     trav1: -1,
     trav2: -1,

@@ -1,0 +1,9 @@
+// без этих настроек eslint не работает в cypress файлах, если не держать открытым файл cypress.config.ts
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ES6", "dom"],
+    "types": ["cypress", "node"]
+  },
+  "include": ["../cypress.config.ts", "**/*.ts"]
+}
